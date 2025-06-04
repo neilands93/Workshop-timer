@@ -12,6 +12,7 @@ const exercises = {
     const startBtn = document.getElementById('start-btn');
     const stopBtn = document.getElementById('stop-btn');
     const resetBtn = document.getElementById('reset-btn');
+    const durationInput = document.getElementById('duration-input');
     const exerciseSelector = document.getElementById('exercise-selector');
     const progressBar = document.getElementById('progress-bar');
 
@@ -47,6 +48,14 @@ const exercises = {
       return `${minutes.toString().padStart(2, '0')}:${remaining.toString().padStart(2, '0')}`;
     }
 
+    function getCustomDuration() {
+      const value = parseFloat(durationInput.value);
+      if (!isNaN(value) && value > 0) {
+        return Math.round(value * 60); // assume minutes
+      }
+      return null;
+    }
+
     function updateDisplay() {
       timerDisplay.textContent = formatTime(totalSeconds);
       if (currentExerciseDuration > 0) {
@@ -57,8 +66,14 @@ const exercises = {
 
     function selectExercise(name, duration, button) {
       stopTimer();
-      currentExerciseDuration = duration;
-      totalSeconds = duration;
+      const custom = getCustomDuration();
+      if (custom !== null) {
+        currentExerciseDuration = custom;
+        totalSeconds = custom;
+      } else {
+        currentExerciseDuration = duration;
+        totalSeconds = duration;
+      }
       exerciseTitle.textContent = name;
       updateDisplay();
       if (selectedExerciseButton) selectedExerciseButton.classList.remove('active');
@@ -71,6 +86,14 @@ const exercises = {
 
     function startTimer() {
       if (isRunning || totalSeconds <= 0) return;
+
+      const custom = getCustomDuration();
+      if (custom !== null) {
+        currentExerciseDuration = custom;
+        totalSeconds = custom;
+        updateDisplay();
+      }
+
       isRunning = true;
       startBtn.disabled = true;
       stopBtn.disabled = false;
