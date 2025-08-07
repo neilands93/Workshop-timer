@@ -62,6 +62,10 @@ const exercises = {
         const percent = (totalSeconds / currentExerciseDuration) * 100;
         progressBar.style.width = `${percent}%`;
       }
+      timerDisplay.classList.add('tick-animation');
+      setTimeout(() => {
+        timerDisplay.classList.remove('tick-animation');
+      }, 500); // Match animation duration
     }
 
     function selectExercise(name, duration, button) {
